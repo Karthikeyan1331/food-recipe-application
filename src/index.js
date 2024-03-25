@@ -6,6 +6,7 @@ import Login from './login/formSignUpIn'
 import SearchP from './login/Search'
 import Instruction from './foodSteps/foodInstruction'
 import CheckYourMail from './login/EmailVerifiefied'
+import Verifiedd from './login/verify'
 import {
 createBrowserRouter,
   RouterProvider,
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
   {
     path:"/CheckYourMail",
     element:<CheckYourMail/>,
+  },
+  {
+    path:"/verify",
+    element:<Verifiedd/>,
   },
 ]);
 const root = ReactDOM.createRoot(document.getElementById('root'));

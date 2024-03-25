@@ -57,59 +57,57 @@ const Login = () => {
     setErrorMessage(errorMessage);
   };
   const sendUserCredential = () => {
-    setLoading(true);
     console.log({ firstName, lastName, email, password, isRegisterActive });
-
     setErrorMessage("")
-    if (!validateEmail(email)) {
-      setErrorMessage('Please enter a valid email address');
-      return;
-    }
-
-
     // Validate that all fields are filled
     if (!firstName || !lastName || !email || !password) {
       setErrorMessage('Please fill in all fields');
       return;
     }
-    // Send data to Node.js server
-    fetch('http://localhost:8000/api/Login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ firstName, lastName, email, password, isRegisterActive }),
-      credentials: 'include',
-    })
-      .then(response => {
-        if (response.ok) {
-
-          // Handle successful response from server
-          response.json().then(data => {
-            if (!data.success) {
-              setLoading(false);
-              if (data.message === 'EmailExisted') {
-                setErrorMessage("Email address already in use. Please choose another.")
-              }
-              return
-            }
-            else {
-              console.log(data.success)
-              
-              setTimeout(() => {
-                navigate('/CheckYourMail', { state: { data: true, email1: email } });
-              }, 2000);
-            }
-          });
-          // Optionally, reset form fields here
-        } else {
-          // Handle error response from server
-          console.error('Failed to register user');
-        }
+    else if (!validateEmail(email)) {
+      setErrorMessage('Please enter a valid email address');
+      return;
+    }
+    else {
+      // Send data to Node.js server
+      fetch('http://localhost:8000/api/Login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ firstName, lastName, email, password, isRegisterActive }),
+        credentials: 'include',
       })
-      .catch(error => {
-        console.error('Error:', error);
-      });
+        .then(response => {
+          if (response.ok) {
+
+            // Handle successful response from server
+            response.json().then(data => {
+              if (!data.success) {
+                setLoading(false);
+                if (data.message === 'EmailExisted') {
+                  setErrorMessage("Email address already in use. Please choose another.")
+                }
+                return
+              }
+              else {
+                console.log(data.success, data.user)
+
+                setTimeout(() => {
+                  navigate('/CheckYourMail', { state: { data: true, credenUser: data.user } });
+                }, 2000);
+              }
+            });
+            // Optionally, reset form fields here
+          } else {
+            // Handle error response from server
+            console.error('Failed to register user');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    }
   }
 
 
