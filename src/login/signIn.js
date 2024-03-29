@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import '@fortawesome/fontawesome-free/css/all.min.css';
+import axios from 'axios'
 import { useLocation, useNavigate } from 'react-router-dom';
 import $ from 'jquery';
 const SignIn = () => {
@@ -14,6 +15,7 @@ const SignIn = () => {
     setShowPassword(!showPassword);
   };
   const navigate = useNavigate();
+  axios.defaults.withCredentials=true
   const sendUserCredential = (event) => {
     event.preventDefault();
     setLoading(true);
@@ -35,31 +37,55 @@ const SignIn = () => {
       setErrorMessage("Please fill Password");
     }
     // Send data to Node.js server
-    $.ajax({
-      url: 'http://localhost:8000/api/UserLogin', // Corrected URL
-      method: 'POST',
-      dataType: 'json', // Corrected data type
-      data: JSON.stringify({ email, password }), // Stringify the data object
-      contentType: 'application/json', // Specify content type for JSON data
-      success: function (response) {
-        console.log('Response:', response);
-      },
-      error: function (xhr, status, error) {
-        console.error('Error:', error);
-        // Handle the error here
-      },
-    });
+    axios.post('http://localhost:8000/api/UserLogin',{ email, password })
+    .then((response)=>{
+      response=response.data
+      console.log(response)
+      if (response.success) {
+        console.log(true, response.message)
+        navigate('/')
+      }
+      else {
+        console.log(response.message)
+      }
+    })
+    .catch((error)=>{
+      console.error('Error:', error);
+    })
+    
   }
   const validateEmail = (email) => {
     // Regular expression for validating email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
+  useEffect(() => {
+    axios.post('http://localhost:8000/ValidToken',{ email, password })
+    .then((response)=>{
+      response=response.data
+      if (response.valid) {
+        console.log(true, response.message)
+        // navigate('/')
+      }
+      else{
+        console.log(response)
+      }
+    })
+    .catch((error)=>{
+      console.error('Error:', error);
+    })
+    
+    setEmail('');
+    setPassword('');
+    setErrorMessage('');
+    setErrorClass('');
+    setShowPassword(false);
+  }, []);
 
   return (
     <div className="login-form-container login-sign-in">
 
-      <form>
+      <form autoComplete="off">
         <div className='text-[30px] topCreSign'>Sign In</div>
         <div className="login-social-icons">
           <a href="/google-signup" className="login-icon">
@@ -70,6 +96,8 @@ const SignIn = () => {
         <input type="email"
           placeholder="Email"
           onChange={(e) => { setErrorMessage(''); setEmail(e.target.value) }}
+          name='email'
+          value={email}
         />
 
         <div className="relative w-full">
@@ -82,6 +110,7 @@ const SignIn = () => {
               setErrorMessage('');
               setPassword(e.target.value);
             }}
+            name='password'
           />
           <i
             className={`bi${showPassword ? ' bi-eye-fill' : ' bi-eye-slash-fill'

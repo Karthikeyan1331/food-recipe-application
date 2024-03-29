@@ -76,6 +76,11 @@ const SearchPage = () => {
     console.log(data[0])
     navigate('/Instruction', { state: data });
   };
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
     return (
         <div className='SearchP'>
             <TopBar />
@@ -84,9 +89,10 @@ const SearchPage = () => {
                 <div className="SearchPinput1">
                     <input className='SearchTextField'
                         type="text"
-                        placeholder="Type..."
+                        placeholder="Search..."
                         value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)} />
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onKeyPress={handleKeyPress} />
                     <input className='SearchPSubmit'
                         type="submit"
                         value="Search"
