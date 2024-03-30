@@ -29,7 +29,7 @@ useEffect(() => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ message: 'hello' }),
+        body: JSON.stringify({ message: 'hello'}),
       });
 
       const data = await response.json();

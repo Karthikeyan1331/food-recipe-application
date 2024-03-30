@@ -46,6 +46,7 @@ const SignIn = () => {
         navigate('/')
       }
       else {
+        setErrorMessage(response.message);
         console.log(response.message)
       }
     })
@@ -118,14 +119,15 @@ const SignIn = () => {
             onClick={handleTogglePassword}
           ></i>
         </div>
-        {errorMessage &&
+        
+        <a href="/forgot-password"
+          className='text-[12px] text-blue-500 font-bold ml-[11vw] my-[.5vw] hover:underline'>
+          Forget Your Password?</a>
+          {errorMessage &&
           <div className="text-grey-950 bg-red-500 mt-2 px-3 py-1 text-[13px] rounded-md">
             {errorMessage}
           </div>
         }
-        <a href="/forgot-password"
-          className='text-[12px] text-blue-500 font-bold ml-[11vw] my-[.5vw] hover:underline'>
-          Forget Your Password?</a>
         <button onClick={sendUserCredential}>Sign In</button>
       </form>
     </div>

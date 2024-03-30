@@ -6,19 +6,19 @@
 }
 
 #SearchPhead {
+    position: relative;
     background-color: rgb(247, 246, 246);
     height: 80px;
     width: 100%;
-    display: flex;
-    flex-direction: row;
     box-shadow: 0 0px 5px rgba(0, 0, 0, 0.3);
 }
 
 
 
 .SearchPheadings {
-    margin-left: 1vw;
-    margin-top: 1.6vw;
+    float: left;
+    margin-left: 10px;
+    margin-top: 25px;
     display: flex;
     flex-direction: row;
     justify-items: flex-start;
@@ -31,24 +31,26 @@
 }
 
 .SearchPsign {
-    display: flex;
-    flex-direction: row;
-    padding-left: 20vw;
+    float: right;
+    position: relative;
     font-size: 20px;
 }
 
 .SearchPinput1 {
-    padding: 20px 0 0 100px;
-    display: flex;
-    flex-direction: row;
+    padding: 20px 0 0 0px;
 }
 .SearchPSubmit, .SearchTextField{
     height: 50px;
     padding: 0 15px;
     background-color: #fff;
+    
 }
 .SearchTextField{
-    
+    top:0;
+    left:0;
+    float: left;
+    word-spacing: 2;
+    border-radius: 10px 0px 0px 10px;
     width: 300px;
     border: none;
     outline: none;
@@ -59,10 +61,12 @@
     position: relative;
     outline: none;
     cursor: pointer;
+    border-radius: 1px 10px 10px 0px;
 }
 
 #SearchPmiddle {
     height: 80px;
+
     width: 100%;
     background-color: rgb(252, 224, 173);
 }
@@ -123,4 +127,21 @@
 
 .SearchPrecipe-card a:hover {
     background-color: #555;
+}
+.page-item{
+    padding: 5px 12px;
+    border: 1px solid rgb(95, 95, 95);
+    color:black;
+    font-weight: bold;
+    border-radius: 5px;
+    margin:5px 2px;
+    font-size: large;
+    opacity: 1;
+    transition: all .3s;
+}
+.page-item:hover{
+    opacity: .8;
+    background-color: #333;
+    color: #fff;
+    cursor: pointer;
 }

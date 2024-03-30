@@ -7,6 +7,7 @@ import SearchP from './login/Search'
 import Instruction from './foodSteps/foodInstruction'
 import CheckYourMail from './login/EmailVerifiefied'
 import Verifiedd from './login/verify'
+import 'bootstrap/dist/css/bootstrap.min.css';
 import {
 createBrowserRouter,
   RouterProvider,
