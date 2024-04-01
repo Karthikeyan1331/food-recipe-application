@@ -4,11 +4,47 @@ import Foot from '../FrontPage/foot'
 import { useNavigate } from 'react-router-dom';
 import TopBar from '../component/TopBar'
 const SearchPage = () => {
-    let curPage=1, totPage=10, perPage=20;
+    let perPage = 20;
     const [response, setResponse] = useState('');
     const [arr, setArr] = useState([]);
-    const [currentPage,setCurrentPage]=useState(curPage)
-    const [totalPage, setTotalPage]=useState(totPage)
+    const [currentPage, setCurrentPage] = useState(1)
+    const [totalPage, setTotalPage] = useState(10)
+    const [paginationArray, setPaginationArray] = useState([])
+    function paginationRendered(paginationN, totalPage) {
+        console.log(paginationN, totalPage);
+        let arr = [];
+        if (totalPage < 10) {
+            for (let i = 1; i <= totalPage; i++) {
+                arr.push(i);
+            }
+        }
+        else if (paginationN <= 4) {
+            for (let i = 1; i <= paginationN + 2; i++) {
+                arr.push(i);
+            }
+            arr.push("...");
+            arr.push(totalPage);
+        } else if (paginationN > 3 && totalPage - 3 > paginationN) {
+            arr.push(1);
+            arr.push("...");
+            for (let i = paginationN - 2; i <= paginationN + 2; i++) {
+                arr.push(i);
+            }
+            arr.push("...");
+            arr.push(totalPage);
+        } else {
+            arr.push(1);
+            arr.push("...");
+            for (
+                let i = paginationN - 2;
+                i <= totalPage;
+                i++
+            ) {
+                arr.push(i);
+            }
+        }
+        setPaginationArray(arr)
+    }
 
     async function SearchD(data) {
         console.log(data);
@@ -28,30 +64,40 @@ const SearchPage = () => {
         );
     }
 
+    const DefSearch = async (currentPage) => {
+        try {
+            const response = await fetch('http://localhost:8000/api/search', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ message: 'search', currentPage: currentPage, perPage: perPage }),
+            });
+
+            const data = await response.json();
+            setResponse(data.response);
+            SearchD(data.datavalue);
+            let totPage = Math.ceil(Number(data.totalCount) / perPage);
+            setTotalPage(totPage)
+        } catch (error) {
+            console.error('Error sending message:', error);
+        }
+    };
     useEffect(() => {
-        const DefSearch = async () => {
-            try {
-                const response = await fetch('http://localhost:8000/api/search', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ message: 'search', currentPage:curPage, perPage:perPage}),
-                });
-
-                const data = await response.json();
-                setResponse(data.response);
-                SearchD(data);
-            } catch (error) {
-                console.error('Error sending message:', error);
-            }
-        };
-
-        DefSearch();
+        DefSearch(currentPage);
     }, []);
-    const [searchQuery, setSearchQuery] = useState('');
 
-    const handleSearch = async () => {
+    const [searchQuery, setSearchQuery] = useState('');
+    useEffect(() => {
+        console.log("hello")
+        paginationRendered(currentPage, totalPage);
+        if(searchQuery!=='')
+            handleSearch(currentPage)
+        else
+            DefSearch(currentPage)
+    }, [totalPage, currentPage]);
+    
+    const handleSearch = async (currentPage) => {
         try {
             console.log(searchQuery)
             let response = await fetch('http://localhost:8000/api/search', {
@@ -59,12 +105,14 @@ const SearchPage = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ message: searchQuery, currentPage:curPage, perPage:perPage }),
+                body: JSON.stringify({ message: searchQuery, currentPage: currentPage, perPage: perPage }),
             });
 
             const data = await response.json();
             setResponse(data.response);
-            SearchD(data);
+            SearchD(data.datavalue);
+            let totPage = Math.ceil(Number(data.totalCount) / perPage);
+            setTotalPage(totPage)
         } catch (error) {
             console.error('Error sending search query:', error);
         }
@@ -81,15 +129,22 @@ const SearchPage = () => {
     };
     const handleKeyPress = (e) => {
         if (e.key === 'Enter') {
-            handleSearch();
+            handleSearch(1);setCurrentPage(1)
         }
     };
     const handlePageItemClick = (e) => {
         const targetClassName = e.target.className;
         if (targetClassName.includes('page-item')) {
-          e.target.style.backgroundColor = 'blue';
+            setCurrentPage(Number(e.target.innerText))
+            
         }
-      };
+    };
+    const handlePreviousNext = (e)=>{
+        if(e.target.innerText==='Previous')
+            setCurrentPage((currentPage-1>0)?currentPage-1:currentPage)
+        else if(e.target.innerText==='Next')
+            setCurrentPage((currentPage+1<=totalPage)?currentPage+1:currentPage)
+    }
     return (
         <div className='SearchP'>
             <TopBar />
@@ -105,7 +160,7 @@ const SearchPage = () => {
                     <input className='SearchPSubmit'
                         type="submit"
                         value="Search"
-                        onClick={handleSearch} />
+                        onClick={()=>{handleSearch(1);setCurrentPage(1)}} />
                 </div>
             </section>
 
@@ -129,20 +184,18 @@ const SearchPage = () => {
                 id="pagination-container"
                 className="text-center d-flex justify-content-between align-items-center mb-4"
             >
-                <button id="prev-btn" className="btn btn-primary ml-20">Previous</button>
+                <button id="prev-btn" className="btn btn-primary ml-20" onClick={handlePreviousNext}>Previous</button>
 
                 <ul className="pagination" onClick={handlePageItemClick}>
-                    <li className="page-item">1</li>
-                    <li className="page-item">...</li>
-                    <li className="page-item">3</li>
-                    <li className="page-item">4</li>
-                    <li className="page-item">5</li>
-                    <li className="page-item">6</li>
-                    
-                    <li className="page-item">...</li>
-                    <li className="page-item">10</li>
+                    {paginationArray.map((item, index) => { 
+                        return (
+                            <li key={index} className={`${item === '...' ? 'NoDot' : 'page-item'} ${
+                                currentPage === item ? 'page-item-active' : ''
+                              }`}>{item}</li>
+                        );
+                    })}
                 </ul>
-                <button id="next-btn" className="btn btn-primary mr-20">Next</button>
+                <button id="next-btn" className="btn btn-primary mr-20" onClick={handlePreviousNext}>Next</button>
             </div>
             <div>
                 <Foot />

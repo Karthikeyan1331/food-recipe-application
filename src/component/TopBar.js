@@ -34,6 +34,21 @@ const TopBar = () => {
   useEffect(() => {
     setvalidate(temp)
   }, [temp])
+  const handleLogout = async () => {
+    try {
+      // Send a POST request to your backend logout endpoint
+      const response = await axios.post('http://localhost:8000/logout');
+      if (response.status === 200) {
+        // Redirect to login page or perform any other action after successful logout
+        window.location.reload() // Redirect to login page
+      } else {
+        // Handle logout failure
+        console.error('Logout failed:', response.data);
+      }
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
+  }
   console.log(validate)
   return (
     <div>
@@ -52,7 +67,7 @@ const TopBar = () => {
         <div className="SearchPsign mt-[1vw] mb-[1vw] py-1 mr-5">
           {validate ? (
             <div className='ml-[50px] flex'>
-              <div className='rounded-lg font-bold cursor-pointer text-white bg-red-500 px-[12px] py-[10px] transition-all hover:bg-red-600'>
+              <div onClick={handleLogout} className='rounded-lg font-bold cursor-pointer text-white bg-red-500 px-[12px] py-[10px] transition-all hover:bg-red-600'>
                 LOG OUT</div>
               <div className='ml-5'>
                 <img src='img/slider-01.png' alt='' className='border-2 border-black shadow-lg cursor-pointer w-[50px] h-[50px] rounded-full' />
