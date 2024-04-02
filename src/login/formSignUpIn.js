@@ -3,6 +3,7 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './login.css'
 import SignIn from './signIn'
+import './googleButton.css'
 const Login = () => {
   const signInImageURL = 'https://source.unsplash.com/800x600/?burger';
   const signUpImageURL = 'https://source.unsplash.com/800x600/?pizza';
@@ -130,11 +131,11 @@ const Login = () => {
           <form>
             <div className='text-[30px] topCreSign'>Create Account</div>
             <div className="login-social-icons">
-              <a href="/google-signup" className="login-icon">
-                <i className="fa-brands fa-google-plus-g"></i>
-              </a>
+              <button type="button" className="login-with-google-btn" >
+                Sign in with Google
+              </button>
             </div>
-            <div className='text-sm'>or use your email for registration</div>
+            <div className='text-sm my-3'>or use your email for registration</div>
             <div className='flex'>
               <input
                 type="text"

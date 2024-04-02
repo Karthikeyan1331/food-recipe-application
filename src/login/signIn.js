@@ -3,6 +3,9 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 import axios from 'axios'
 import { useLocation, useNavigate } from 'react-router-dom';
 import $ from 'jquery';
+import "./googleButton.css"
+import GoogleSignUpButton from "./googleButton"
+import API_URL from '../config';
 const SignIn = () => {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState('');
@@ -15,7 +18,7 @@ const SignIn = () => {
     setShowPassword(!showPassword);
   };
   const navigate = useNavigate();
-  axios.defaults.withCredentials=true
+  axios.defaults.withCredentials = true
   const sendUserCredential = (event) => {
     event.preventDefault();
     setLoading(true);
@@ -37,23 +40,23 @@ const SignIn = () => {
       setErrorMessage("Please fill Password");
     }
     // Send data to Node.js server
-    axios.post('http://localhost:8000/api/UserLogin',{ email, password })
-    .then((response)=>{
-      response=response.data
-      console.log(response)
-      if (response.success) {
-        console.log(true, response.message)
-        navigate('/')
-      }
-      else {
-        setErrorMessage(response.message);
-        console.log(response.message)
-      }
-    })
-    .catch((error)=>{
-      console.error('Error:', error);
-    })
-    
+    axios.post(`${API_URL}api/UserLogin`, { email, password })
+      .then((response) => {
+        response = response.data
+        console.log(response)
+        if (response.success) {
+          console.log(true, response.message)
+          navigate('/')
+        }
+        else {
+          setErrorMessage(response.message);
+          console.log(response.message)
+        }
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      })
+
   }
   const validateEmail = (email) => {
     // Regular expression for validating email format
@@ -61,39 +64,37 @@ const SignIn = () => {
     return emailRegex.test(email);
   };
   useEffect(() => {
-    axios.post('http://localhost:8000/ValidToken',{ email, password })
-    .then((response)=>{
-      response=response.data
-      if (response.valid) {
-        console.log(true, response.message)
-        // navigate('/')
-      }
-      else{
-        console.log(response)
-      }
-    })
-    .catch((error)=>{
-      console.error('Error:', error);
-    })
-    
+    axios.post(API_URL+'ValidToken', { email, password })
+      .then((response) => {
+        response = response.data
+        if (response.valid) {
+          console.log(true, response.message)
+          // navigate('/')
+        }
+        else {
+          console.log(response)
+        }
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      })
+
     setEmail('');
     setPassword('');
     setErrorMessage('');
     setErrorClass('');
     setShowPassword(false);
   }, []);
-
   return (
     <div className="login-form-container login-sign-in">
 
       <form autoComplete="off">
-        <div className='text-[30px] topCreSign'>Sign In</div>
+        <div className='text-[30px] mb-0 topCreSign'>Sign In</div>
+
         <div className="login-social-icons">
-          <a href="/google-signup" className="login-icon">
-            <i className="fa-brands fa-google-plus-g"></i>
-          </a>
+          <GoogleSignUpButton />
         </div>
-        <div className='text-sm'>or use your email password</div>
+        <div className='text-sm my-3'>or use your email password</div>
         <input type="email"
           placeholder="Email"
           onChange={(e) => { setErrorMessage(''); setEmail(e.target.value) }}
@@ -119,11 +120,11 @@ const SignIn = () => {
             onClick={handleTogglePassword}
           ></i>
         </div>
-        
+
         <a href="/forgot-password"
           className='text-[12px] text-blue-500 font-bold ml-[11vw] my-[.5vw] hover:underline'>
           Forget Your Password?</a>
-          {errorMessage &&
+        {errorMessage &&
           <div className="text-grey-950 bg-red-500 mt-2 px-3 py-1 text-[13px] rounded-md">
             {errorMessage}
           </div>
