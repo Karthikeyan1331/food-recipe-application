@@ -12,8 +12,7 @@ const TokenValidation = () => {
         response = response.data;
         console.log(response);
         if (response.valid) {
-          setTokenVariable(true)
-          console.log(true, response.message);
+          setTokenVariable(response.message)
         } else {
           setTokenVariable(false)
           navigate('/Login', { state: false });

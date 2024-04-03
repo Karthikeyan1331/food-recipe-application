@@ -8,23 +8,13 @@ import Home from "./FrontPage/home"
 import axios from 'axios'
 import $ from 'jquery';
 import { useLocation, useNavigate } from 'react-router-dom';
+import CheckCred from './TokenValidate';
 function App() {
-  axios.defaults.withCredentials = true
-  const navigate = useNavigate();
+  let temp = CheckCred();
+  const [validate, setvalidate] = useState(temp)
   useEffect(() => {
-    axios.post('http://localhost:8000/ValidToken',)
-      .then((response) => {
-        response = response.data
-        console.log(response)
-        if (response.valid) {
-          console.log(true, response.message)
-        }
-        else {
-          navigate('/Login', { state: false })
-          console.log(response.message)
-        }
-      })
-  })
+    setvalidate(temp)
+  }, [temp])
   return (
     <div className="App">
       <Home />

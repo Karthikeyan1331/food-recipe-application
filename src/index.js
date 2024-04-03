@@ -7,6 +7,10 @@ import SearchP from './login/Search'
 import Instruction from './foodSteps/foodInstruction'
 import CheckYourMail from './login/EmailVerifiefied'
 import Verifiedd from './login/verify'
+import ForgetPassword from './login/forget_password/ForgetPassword'
+import ForgetPassCheckMail from './login/forget_password/CheckYourMail'
+import ForgetPassVerified from './login/forget_password/Forget_Password_Mail_verification'
+import ForgetPassReSetPass from './login/forget_password/ReSetPassword'
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import {
@@ -39,6 +43,22 @@ const router = createBrowserRouter([
   {
     path:"/verify",
     element:<Verifiedd/>,
+  },
+  {
+    path:"/ForgetPassword",
+    element:<ForgetPassword/>,
+  },
+  {
+    path:"/ForgetPassCheckMail",
+    element:<ForgetPassCheckMail/>,
+  },
+  {
+    path:"/ForgetPassVerified",
+    element:<ForgetPassVerified/>,
+  },
+  {
+    path:"/ForgetPassReSetPass",
+    element:<ForgetPassReSetPass/>,
   },
 ]);
 const root = ReactDOM.createRoot(document.getElementById('root'));

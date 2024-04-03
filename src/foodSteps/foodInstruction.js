@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useLocation } from 'react-router-dom';
 import TopBar from '../component/TopBar'
 import Foot from '../FrontPage/foot'
 import './Instruction.css'
 import CookS from './CookSymbol'
 import { faL } from '@fortawesome/free-solid-svg-icons';
-
+import {useReactToPrint} from 'react-to-print';
+import * as htmlToImage from 'html-to-image';
 const FoodInstruction = () => {
+  const printOutData = useRef(); 
   const location = useLocation();
   const data = location.state
   let ingredients = data[5].split(','), directions = data[8].split('.').filter(direction => direction.trim() !== '');
@@ -68,10 +70,41 @@ const FoodInstruction = () => {
       window.removeEventListener('keydown', handleKeyPress);
     };
   }, [isPlaying]);
+
+
+
+  const printDiv = useReactToPrint({
+    content:()=>printOutData.current,
+    pageStyle: '@page { size:legal portrait; }',
+  });
+  const [hideAbovePic, setHideAbovePic] = useState(false);
+
+  const handleDownloadPNG = () => {
+    setHideAbovePic(true); // Hide AbovePic section
+    if (printOutData.current) {
+      htmlToImage.toPng(printOutData.current, { 
+        width: printOutData.current.offsetWidth + 200,
+        height: printOutData.current.offsetHeight + 100 
+      })
+        .then((dataUrl) => {
+          const link = document.createElement('a');
+          link.download = data[0]+'.png';
+          link.href = dataUrl;
+          link.click();
+        })
+        .catch((error) => {
+          console.error('Error converting to PNG:', error);
+        })
+        .finally(() => {
+          setHideAbovePic(false); // Show AbovePic section again
+        });
+    }
+  };
+  
   return (
     <div className=''>
       <TopBar />
-      <div className='Recipe'>
+      <div className='Recipe' ref={printOutData}>
         <div className='RecipeName'>
           {data[0]}
         </div>
@@ -84,15 +117,17 @@ const FoodInstruction = () => {
           <div className='mt-[.2vw] ml-[.2vw]'>(999)</div>
           <div className='mt-[.2vw] ml-[.5vw] font-bold'>{data[1]}</div>
         </div>
-        <div className='AbovePic'>
-          <div className='Save'><i className="bi bi-bookmark"></i></div>
-          <div className='Save'><i className="bi bi-download"></i></div>
-          <div className='Save'><i className="bi bi-printer"></i></div>
-          <div className='Save'><i className="bi bi-share"></i></div>
-          <div className='IMadeThis'><i className="bi bi-camera"></i>&nbsp;&nbsp;My Work</div>
-        </div>
+        {!hideAbovePic && (
+          <div className='AbovePic'>
+            <div className='Save'><i className="bi bi-bookmark"></i></div>
+            <div className='Save' onClick={handleDownloadPNG}><i className="bi bi-download"></i></div>
+            <div className='Save' onClick={printDiv}><i className="bi bi-printer" onClick={printDiv}></i></div>
+            <div className='Save'><i className="bi bi-share"></i></div>
+            <div className='IMadeThis'><i className="bi bi-camera"></i>&nbsp;&nbsp;My Work</div>
+          </div>
+        )}
         <div className='mt-[1vw] bg-blue-100'>
-          <img src={data[4]} alt='' />
+          <img src={data[4]} alt='' id="Content_Image"/>
         </div>
         <div className='mt-[3vw] border-b border-dashed border-black'>
           <div className='flex foodIcon'>
@@ -140,12 +175,6 @@ const FoodInstruction = () => {
                 className='flex text-base md:text-[1.1vw] mt-[1vw] StepsDirections'
                 key={index}>{item}</div>
             ))}
-            <div className='flex text-base md:text-[1.1vw] mt-[1vw] StepsDirections'>
-              <p>2</p>
-              <p>g chill power</p>
-            </div>
-
-
           </div>
 
         </div>

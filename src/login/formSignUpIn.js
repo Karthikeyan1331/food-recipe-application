@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import './login.css'
 import SignIn from './signIn'
 import './googleButton.css'
+import GoogleSignUpButton from "./googleButton"
 const Login = () => {
   const signInImageURL = 'https://source.unsplash.com/800x600/?burger';
   const signUpImageURL = 'https://source.unsplash.com/800x600/?pizza';
@@ -131,9 +132,7 @@ const Login = () => {
           <form>
             <div className='text-[30px] topCreSign'>Create Account</div>
             <div className="login-social-icons">
-              <button type="button" className="login-with-google-btn" >
-                Sign in with Google
-              </button>
+              <GoogleSignUpButton />
             </div>
             <div className='text-sm my-3'>or use your email for registration</div>
             <div className='flex'>

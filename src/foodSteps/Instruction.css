@@ -2,10 +2,14 @@
     margin: 3vw 0vw 0vw 8vw;
     font-family: 'Poppins', sans-serif;
     width: 50vw;
+    background-color: white;
 }
 .RecipeName{
     font-family: 'Russo One', sans-serif;
     font-size: 3vw;
+}
+.hidden{
+    display: none;
 }
 .Rating{
     display: flex;
