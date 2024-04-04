@@ -10,7 +10,6 @@ const TopBar = () => {
   function generateSrcSet(originalUrl) {
       // Split the URL at the '=s' part to extract the base URL
     const [baseUrl] = originalUrl.split('=s');
-    console.log(baseUrl)
     // Generate the 1x and 2x versions of the image URL
     const src1x = `${baseUrl}=s96-c`;
     const src2x = `${baseUrl}=s192-c`;
@@ -48,7 +47,6 @@ const TopBar = () => {
     if(temp)
       setProfilePic(temp.picture)
   }, [temp])
-  console.log(validate,profilePic)
   const handleLogout = async () => {
     try {
       // Send a POST request to your backend logout endpoint
@@ -64,7 +62,6 @@ const TopBar = () => {
       console.error('Error during logout:', error);
     }
   }
-  console.log(validate)
   return (
     <div>
       <section id="SearchPhead">

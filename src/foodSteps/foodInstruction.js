@@ -1,80 +1,116 @@
-import React, { useState, useEffect, useRef } from 'react'
-import { useLocation } from 'react-router-dom';
+import React, { useState, useEffect, useRef, useCallback } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom';
 import TopBar from '../component/TopBar'
 import Foot from '../FrontPage/foot'
 import './Instruction.css'
+import axios from 'axios';
 import CookS from './CookSymbol'
 import { faL } from '@fortawesome/free-solid-svg-icons';
-import {useReactToPrint} from 'react-to-print';
+import { useReactToPrint } from 'react-to-print';
 import * as htmlToImage from 'html-to-image';
+import FoodLikes from './InstructionLikes';
+import FoodBookmark from './InstructionBookmark';
+import API_URL from '../config';
 const FoodInstruction = () => {
-  const printOutData = useRef(); 
+  const printOutData = useRef();
   const location = useLocation();
-  const data = location.state
-  let ingredients = data[5].split(','), directions = data[8].split('.').filter(direction => direction.trim() !== '');
-  
+  const [data, setData] = useState([]);
+  const [directions, setDirections] = useState([]);
+  const [ingredients, setIngredients] = useState([]);
   const [isSpeechEnded, setIsSpeechEnded] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(true); // Initially, set to true to display the play icon
+  const [isPlaying, setIsPlaying] = useState(true);
+  const navigate = useNavigate();
+  const currentURL = window.location.href;
 
-  const toggleIcon = () => {
-    setIsPlaying(prevIsPlaying => !prevIsPlaying)
-  };
-  function DestroyVoice(){
-    if(!isPlaying){
-      setIsSpeechEnded(prevIsPlaying => !prevIsPlaying)
-      toggleIcon();
-    }
+  // Function to extract the value of 'id' from the URL
+  function extractIdFromURL(url) {
+    const urlParams = new URLSearchParams(url.split('?')[1]);
+    const idValue = urlParams.get('id');
+    return idValue;
   }
   useEffect(() => {
-    console.log(isPlaying,isSpeechEnded);
-    if(!isPlaying && !isSpeechEnded){
-      let text=directions.join(". ");
-      let speech=new SpeechSynthesisUtterance()
-      let voice=window.speechSynthesis.getVoices();
-      speech.voice=voice[3]
-      speech.text=text
-      
-      window.speechSynthesis.speak(speech)
-      setIsSpeechEnded(true);
-      speech.onend = () => {
-        setIsSpeechEnded(false);
-        setIsPlaying(true); // Reset isPlaying to false after speech ends
-      };
-      // window.speechSynthesis.speak(value);
-      
+    if (location.state) {
+      setData(location.state);
+    } else {
+      const idValue = extractIdFromURL(currentURL);
+      axios.post(`${API_URL}api/FoodInstruction`, { id: idValue })
+        .then(response => {
+          setData(response.data);
+        })
+        .catch(error => {
+          console.log('Error:', error);
+          navigate('/Search');
+        });
     }
-    else if(isSpeechEnded && isPlaying){
-      window.speechSynthesis.pause();
-    }
-    else if(isSpeechEnded && !isPlaying){
-      window.speechSynthesis.resume();
-    }
-    else {
-      // If currently paused, stop the speech
-      window.speechSynthesis.cancel();
-    }
-    
-  }, [isPlaying]); // 
-  const handleKeyPress = (event) => {
-    if (event.key === 'k') {
+  }, [location.state, currentURL, navigate]);
+
+  const toggleIcon = useCallback(() => {
+    setIsPlaying(prevIsPlaying => !prevIsPlaying);
+  }, []);
+
+  const DestroyVoice = useCallback(() => {
+    if (!isPlaying) {
+      setIsSpeechEnded(prevIsPlaying => !prevIsPlaying);
       toggleIcon();
     }
-    // console.log(isPlaying,"Ass wipe")
-    if(event.key==='e'){
-      DestroyVoice()
-    }
-  };
+  }, [isPlaying, setIsSpeechEnded, toggleIcon]);
   useEffect(() => {
+    if (data.length > 0) {
+      setIngredients(data[5]?.split(',') || []);
+      setDirections(data[8]?.split('.').filter(direction => direction.trim() !== '') || []);
+    }
+  }, [data]);
+
+  
+
+  useEffect(() => {
+    
+    const handleKeyPress = (event) => {
+      if (event.key === 'k') {
+        toggleIcon();
+      }
+      if (event.key === 'e') {
+        DestroyVoice();
+      }
+    };
+
     window.addEventListener('keydown', handleKeyPress);
+
     return () => {
       window.removeEventListener('keydown', handleKeyPress);
     };
-  }, [isPlaying]);
+
+  }, [toggleIcon, DestroyVoice]);
+  
+  
+  useEffect(() => {
+    if (!isPlaying && !isSpeechEnded) {
+      let text = directions.join(". ");
+      let speech = new SpeechSynthesisUtterance();
+      let voice = window.speechSynthesis.getVoices();
+      speech.voice = voice[3];
+      speech.text = text;
+
+      window.speechSynthesis.speak(speech);
+      setIsSpeechEnded(true);
+      speech.onend = () => {
+        setIsSpeechEnded(false);
+        setIsPlaying(true);
+      };
+    } else if (isSpeechEnded && isPlaying) {
+      window.speechSynthesis.pause();
+    } else if (isSpeechEnded && !isPlaying) {
+      window.speechSynthesis.resume();
+    } else {
+      window.speechSynthesis.cancel();
+    }
+  }, [isPlaying, isSpeechEnded, directions]);
+  
 
 
 
   const printDiv = useReactToPrint({
-    content:()=>printOutData.current,
+    content: () => printOutData.current,
     pageStyle: '@page { size:legal portrait; }',
   });
   const [hideAbovePic, setHideAbovePic] = useState(false);
@@ -82,13 +118,13 @@ const FoodInstruction = () => {
   const handleDownloadPNG = () => {
     setHideAbovePic(true); // Hide AbovePic section
     if (printOutData.current) {
-      htmlToImage.toPng(printOutData.current, { 
-        width: printOutData.current.offsetWidth + 200,
-        height: printOutData.current.offsetHeight + 100 
+      htmlToImage.toPng(printOutData.current, {
+        width: printOutData.current.offsetWidth + 100,
+        height: printOutData.current.offsetHeight + 100
       })
         .then((dataUrl) => {
           const link = document.createElement('a');
-          link.download = data[0]+'.png';
+          link.download = data[0] + '.png';
           link.href = dataUrl;
           link.click();
         })
@@ -100,7 +136,7 @@ const FoodInstruction = () => {
         });
     }
   };
-  
+
   return (
     <div className=''>
       <TopBar />
@@ -118,16 +154,16 @@ const FoodInstruction = () => {
           <div className='mt-[.2vw] ml-[.5vw] font-bold'>{data[1]}</div>
         </div>
         {!hideAbovePic && (
-          <div className='AbovePic'>
-            <div className='Save'><i className="bi bi-bookmark"></i></div>
-            <div className='Save' onClick={handleDownloadPNG}><i className="bi bi-download"></i></div>
-            <div className='Save' onClick={printDiv}><i className="bi bi-printer" onClick={printDiv}></i></div>
-            <div className='Save'><i className="bi bi-share"></i></div>
-            <div className='IMadeThis'><i className="bi bi-camera"></i>&nbsp;&nbsp;My Work</div>
+          <div className='AbovePic w-[60vw]'>
+            <FoodBookmark />
+            <div className='Save' title="Download" onClick={handleDownloadPNG}><i className="bi bi-download"></i></div>
+            <div className='Save' title="Print" onClick={printDiv}><i className="bi bi-printer" onClick={printDiv}></i></div>
+            <FoodLikes id={data[9]}/>
+            <div className='IMadeThis' title='Photo'><i className="bi bi-camera"></i>&nbsp;I Made This</div>
           </div>
         )}
         <div className='mt-[1vw] bg-blue-100'>
-          <img src={data[4]} alt='' id="Content_Image"/>
+          <img src={data[4]} alt='' id="Content_Image" />
         </div>
         <div className='mt-[3vw] border-b border-dashed border-black'>
           <div className='flex foodIcon'>

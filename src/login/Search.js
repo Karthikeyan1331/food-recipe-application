@@ -60,6 +60,7 @@ const SearchPage = () => {
                 item['TotalTimeInMins'],
                 item['Servings'],
                 item['TranslatedInstructions'],
+                item['_id']
             ])
         );
     }
@@ -125,7 +126,7 @@ const SearchPage = () => {
     const redirectToNextPage = (data) => {
         // Redirect to '/Instruction' when the component is clicked
         console.log(data[0])
-        navigate('/Instruction', { state: data });
+        navigate('/Instruction?id='+data[9], { state: data });
     };
     const handleKeyPress = (e) => {
         if (e.key === 'Enter') {
