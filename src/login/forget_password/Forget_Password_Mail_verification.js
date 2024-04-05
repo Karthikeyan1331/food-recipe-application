@@ -1,8 +1,15 @@
 import React from 'react'
 
+import "./passwordverify.css"
+
 const Forget_Password_Mail_verification = () => {
   return (
-    <div>Forget_Password_Mail_verification</div>
+    <div>
+      <div className='box1'>
+        <div className='mailveri'>Mail verfication</div>
+        <div className='content'>Check your Registered mail address </div>
+      </div>
+    </div>
   )
 }
 
