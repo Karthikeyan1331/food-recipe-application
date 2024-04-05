@@ -85,6 +85,10 @@ const SignIn = () => {
     setErrorClass('');
     setShowPassword(false);
   }, []);
+
+  const onClickForgetPage=()=>{
+    navigate("/ForgetPassword")
+  }
   return (
     <div className="login-form-container login-sign-in">
 
@@ -122,6 +126,7 @@ const SignIn = () => {
         </div>
 
         <a href="/forgot-password"
+        onClick={onClickForgetPage}
           className='text-[12px] text-blue-500 font-bold ml-[11vw] my-[.5vw] hover:underline'>
           Forget Your Password?</a>
         {errorMessage &&

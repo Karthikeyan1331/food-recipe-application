@@ -5,13 +5,16 @@ const Home = () => {
   const handleClick = (bool) => {
     navigate('/Login', { state: bool });
   };
+  const onClickSearch = () => {
+    navigate('./Search')
+  }
   return (
     <div className='HomePage'>
         <div className='TopS'>
           <img className="logo rounded-full border-2" src="/image/logo.jpg" alt='hi'></img>
           <div className='NavBar'>
             <div>Home</div>
-            <div><Link to="/Search">Search</Link></div>
+            <div onClick={onClickSearch}>Search</div>
             <div>Community</div>
             <div>Cusines</div>
             <div>About</div>
@@ -27,7 +30,7 @@ const Home = () => {
           <div className='About'>Savor Every Moment, Taste Every Bite</div>
           <div className='Cook'>Let'S Cook!</div>
           <div className='des'>Explore 6000+ Delicious Recipes Today</div>
-          <div className="ButtonS">Search</div>
+          <div className="ButtonS" onClick={onClickSearch}>Search</div>
         </div>
         <div className='RightS'>
           
