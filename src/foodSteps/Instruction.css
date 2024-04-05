@@ -27,7 +27,7 @@
     margin-right: 1vw;
 }
 .Save,.IMadeThis{
-    padding: .5vw 2.5vw;
+    padding: .5vw 2vw;
     font-size: 1.5vw;
     border-radius: .3vw;
     cursor: pointer;
@@ -76,4 +76,13 @@
 }
 .Ennd{
     color: red;
+}
+
+.commentInputField{
+    padding-left: 1px;
+    border-bottom: 0px solid black;
+}
+.commentInputField:focus{
+    outline: none;
+    border-bottom: 2px solid black;
 }

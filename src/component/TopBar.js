@@ -44,8 +44,10 @@ const TopBar = () => {
   const [profilePic,setProfilePic] = useState(null)
   useEffect(() => {
     setvalidate(temp)
-    if(temp)
-      setProfilePic(temp.picture)
+    if(temp){
+      localStorage.setItem("useData",JSON.stringify(temp))
+      
+      setProfilePic(temp.picture)}
   }, [temp])
   const handleLogout = async () => {
     try {
@@ -84,6 +86,7 @@ const TopBar = () => {
               <div className='ml-5'>
                 <img src = {profilePic!==null?generateSrcSet(profilePic):'img/slider-01.png'}
                 srcSet={profilePic!==null?generateSrcSet(profilePic):'img/slider-01.png'}
+                id = "profilePic"
                 alt='' className='border-2 border-black shadow-lg cursor-pointer w-[50px] h-[50px] rounded-full' />
               </div>
             </div>

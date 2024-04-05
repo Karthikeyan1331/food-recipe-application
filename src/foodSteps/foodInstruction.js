@@ -10,7 +10,9 @@ import { useReactToPrint } from 'react-to-print';
 import * as htmlToImage from 'html-to-image';
 import FoodLikes from './InstructionLikes';
 import FoodBookmark from './InstructionBookmark';
+import FoodComments from './InstructionComments';
 import API_URL from '../config';
+import FoodReport from './FoodReport';
 const FoodInstruction = () => {
   const printOutData = useRef();
   const location = useLocation();
@@ -66,10 +68,10 @@ const FoodInstruction = () => {
   useEffect(() => {
     
     const handleKeyPress = (event) => {
-      if (event.key === 'k') {
+      if (event.ctrlKey && event.key === 'k') {
         toggleIcon();
       }
-      if (event.key === 'e') {
+      if (event.ctrlKey && event.key === 'e') {
         DestroyVoice();
       }
     };
@@ -155,10 +157,11 @@ const FoodInstruction = () => {
         </div>
         {!hideAbovePic && (
           <div className='AbovePic w-[60vw]'>
-            <FoodBookmark />
+            <FoodBookmark id={data[9]}/>
             <div className='Save' title="Download" onClick={handleDownloadPNG}><i className="bi bi-download"></i></div>
-            <div className='Save' title="Print" onClick={printDiv}><i className="bi bi-printer" onClick={printDiv}></i></div>
+            <div className='Save' title="Print" onClick={printDiv}><i className="bi bi-printer"></i></div>
             <FoodLikes id={data[9]}/>
+            <FoodReport id={data[9]} heading={data[0]}/>
             <div className='IMadeThis' title='Photo'><i className="bi bi-camera"></i>&nbsp;I Made This</div>
           </div>
         )}
@@ -215,6 +218,7 @@ const FoodInstruction = () => {
 
         </div>
       </div>
+      <FoodComments id={data[9]}/>
       <div>
         <Foot />
       </div>
