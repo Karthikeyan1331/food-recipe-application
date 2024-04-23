@@ -11,7 +11,10 @@ import ForgetPassword from './login/forget_password/ForgetPassword'
 import ForgetPassCheckMail from './login/forget_password/CheckYourMail'
 import ForgetPassVerified from './login/forget_password/Forget_Password_Mail_verification'
 import ForgetPassReSetPass from './login/forget_password/ReSetPassword'
+import Profile from './createFood/Profile'
+import Dash from './createFood/dashboard'
 import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 import {
 createBrowserRouter,
@@ -59,6 +62,14 @@ const router = createBrowserRouter([
   {
     path:"/ForgetPassReSetPass",
     element:<ForgetPassReSetPass/>,
+  },
+  {
+    path:"/Profile",
+    element:<Profile/>,
+  },
+  {
+    path:"/Create",
+    element:<Dash/>,
   },
 ]);
 const root = ReactDOM.createRoot(document.getElementById('root'));

@@ -25,14 +25,14 @@ const TopBar = () => {
       case 'Search':
         navigate("/Search");
         break;
-      case 'Community':
-        navigate("/Community");
+      case 'History':
+        navigate("/History");
         break;
-      case 'Articles':
-        navigate("/Articles");
+      case 'Create':
+        navigate("/Create");
         break;
-      case 'About':
-        navigate("/About");
+      case 'Profile':
+        navigate("/Profile");
         break;
       default:
         // Handle other cases if needed
@@ -47,7 +47,7 @@ const TopBar = () => {
     if(temp){
       localStorage.setItem("useData",JSON.stringify(temp))
       
-      setProfilePic(temp.picture)}
+      setProfilePic(temp.profile)}
   }, [temp])
   const handleLogout = async () => {
     try {
@@ -73,9 +73,8 @@ const TopBar = () => {
             alt="Logo" />
           <h1 className='TopNavData' onClick={() => topNavData('Home')}>Home</h1>
           <h1 className='TopNavData' onClick={() => topNavData('Search')}>Search</h1>
-          <h1 className='TopNavData' onClick={() => topNavData('Community')}>Community</h1>
-          <h1 className='TopNavData' onClick={() => topNavData('Articles')}>Articles</h1>
-          <h1 className='TopNavData' onClick={() => topNavData('About')}>About</h1>
+          <h1 className='TopNavData' onClick={() => topNavData('History')}>History</h1>
+          <h1 className='TopNavData' onClick={() => topNavData('Create')}>Create</h1>
         </div>
 
         <div className="SearchPsign mt-[1vw] mb-[1vw] py-1 mr-5">
@@ -84,8 +83,8 @@ const TopBar = () => {
               <div onClick={handleLogout} className='rounded-lg font-bold cursor-pointer text-white bg-red-500 px-[12px] py-[10px] transition-all hover:bg-red-600'>
                 LOG OUT</div>
               <div className='ml-5'>
-                <img src = {profilePic!==null?generateSrcSet(profilePic):'img/slider-01.png'}
-                srcSet={profilePic!==null?generateSrcSet(profilePic):'img/slider-01.png'}
+                <img src = {profilePic!==null?profilePic:'img/slider-01.png'}
+                onClick={() => topNavData('Profile')}
                 id = "profilePic"
                 alt='' className='border-2 border-black shadow-lg cursor-pointer w-[50px] h-[50px] rounded-full' />
               </div>

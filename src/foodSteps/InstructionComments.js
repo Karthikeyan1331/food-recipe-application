@@ -109,7 +109,7 @@ const InstructionComments = ({ id }) => {
       </div>
       <div className='InputArea my-3 mx-1'>
         <div className='flex'>
-          <img src={profilePic} alt=''
+          <img src={profilePic?profilePic:'img/slider-01.png'} alt=''
             id="pictureComment"
             className='border-2 shadow-sm   cursor-pointer w-[40px] h-[40px] rounded-full'></img>
           <input
@@ -138,7 +138,7 @@ const InstructionComments = ({ id }) => {
         {dataValue && dataValue.length > 0 && dataValue.map((valComments, index) => (
           <div key={index} className='UserComments'>
             <div className='float-left'>
-              <img src={profilePic} alt=''
+              <img src={valComments['profile']?valComments['profile']:'img/slider-01.png'} alt=''
                 className='border-2 shadow-sm cursor-pointer w-[38px] h-[38px] rounded-full'></img>
             </div>
             <div className='flex'>
