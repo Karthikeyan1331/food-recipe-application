@@ -7,6 +7,7 @@ import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios'
+import Foot from '../FrontPage/foot';
 const Profile = () => {
   const fileInputRef = useRef(null);
   const [formElements, setFormElements] = useState({})
@@ -165,6 +166,9 @@ const Profile = () => {
           </Row>
           <Button type="button" onClick={handleOnSave} className='mt-4 float-right w-[10vw] px-2 bold fs-4'>Save</Button>
         </div>
+      </div>
+      <div>
+        <Foot />
       </div>
     </div >
   )

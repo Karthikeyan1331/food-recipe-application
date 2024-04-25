@@ -44,7 +44,7 @@ const BookmarkCollections = () => {
         item['Servings'],
         item['TranslatedInstructions'],
         item['_id']]
-        navigate('/Instruction?id='+item._id, { state: data });
+        navigate('/Instruction?id=' + item._id, { state: data });
     };
     return (
         <>
@@ -52,18 +52,22 @@ const BookmarkCollections = () => {
             <section id="SearchPsearch-results">
                 {/* Sample Recipe Card */}
                 {arr.map((item, index) => (
-                    <div className="SearchPrecipe-card h-auto" key={index}>
-                        <img src={item.Image} alt={item.TranslatedRecipeName} />
-                        <div className="px-1">
-                            <h2>{item.TranslatedRecipeName}</h2>
-                            <h3>{item.Cuisine}</h3>
-                            <button onClick={() => redirectToNextPage(item)}
-                                className="ml-1 mb-3 text-gray-100 font-bold px-3 py-2 w-auto bg-blue-500 rounded-lg hover:bg-blue-600"
-                            >
-                                Get Recipe
-                            </button>
+                    // Check if item is not null before rendering
+                    item && (
+                        <div className="SearchPrecipe-card h-auto" key={index}>
+                            <img src={item.Image} alt={item.TranslatedRecipeName} />
+                            <div className="px-1">
+                                <h2>{item.TranslatedRecipeName}</h2>
+                                <h3>{item.Cuisine}</h3>
+                                <button
+                                    onClick={() => redirectToNextPage(item)}
+                                    className="ml-1 mb-3 text-gray-100 font-bold px-3 py-2 w-auto bg-blue-500 rounded-lg hover:bg-blue-600"
+                                >
+                                    Get Recipe
+                                </button>
+                            </div>
                         </div>
-                    </div>
+                    )
                 ))}
             </section>
         </>

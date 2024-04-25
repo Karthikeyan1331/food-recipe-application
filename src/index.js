@@ -14,6 +14,11 @@ import ForgetPassReSetPass from './login/forget_password/ReSetPassword'
 import Profile from './createFood/Profile'
 import Dash from './createFood/Dashboard'
 import History from './history/History'
+import AddFood from './createFood/AddFood'
+import EditFood from './createFood/EditFood';
+import AdminLogin from './admin/login'
+import Approve from './admin/Approve'
+import AdminReport from './admin/Report'
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
@@ -75,6 +80,26 @@ const router = createBrowserRouter([
   {
     path: "/history",
     element: <History />,
+  },
+  {
+    path: "/AddFood",
+    element: <AddFood />,
+  },
+  {
+    path: "/EditFood",
+    element: <EditFood />,
+  },
+  {
+    path: "/Admin_login",
+    element: <AdminLogin />,
+  },
+  {
+    path: "/AdminFoodAprove",
+    element: <Approve />,
+  },
+  {
+    path: "/AdminFoodReport",
+    element: <AdminReport />,
   },
 ]);
 const root = ReactDOM.createRoot(document.getElementById('root'));

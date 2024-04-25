@@ -18,7 +18,7 @@ const Home = () => {
     navigate('/Login', { state: bool });
   };
   const onClickSearch = (e) => {
-    navigate('./'+e)
+    navigate('/'+e)
   }
   let temp = CheckCred();
   const [validate, setvalidate] = useState(temp)
@@ -58,8 +58,8 @@ const Home = () => {
           <div>Home</div>
           <div onClick={()=>onClickSearch("Search")}>Search</div>
           <div onClick={()=>onClickSearch("History")}>History</div>
-          <div>Cusines</div>
-          <div>About</div>
+          <div onClick={()=>onClickSearch("Create")}>Create</div>
+          <div onClick={()=>onClickSearch("Profile")}>Profile</div>
         </div>
         {!validate ? (
           <>
@@ -77,7 +77,7 @@ const Home = () => {
         <div className='About'>Savor Every Moment, Taste Every Bite</div>
         <div className='Cook'>Let'S Cook!</div>
         <div className='des'>Explore 6000+ Delicious Recipes Today</div>
-        <div className="ButtonS" onClick={onClickSearch}>Search</div>
+        <div className="ButtonS" onClick={()=>onClickSearch("Search")}>Search</div>
       </div>
       <div className='RightS'>
 

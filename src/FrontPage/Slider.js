@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 export default function Slider({ images1 }) {
   // Assuming your Slider component requires some data items
   const [sliderContent, setSliderContent] = useState(null);
   const [slider, setSlider] = useState(null);
+  const navigate = useNavigate();
   const inputRef =useRef()
   let cardWidth=0,sliderContainerWidth=0,cards={},number=0
   function myFunc() {
@@ -45,7 +47,9 @@ export default function Slider({ images1 }) {
     
   }
 
-
+  const handleRedirectedInstruction=(id)=>{
+    navigate('/Instruction?id='+id)
+  }
   return (
     <div className="transform translate-y-[6vw] mb-[6vw]">
       <section>
@@ -68,7 +72,10 @@ export default function Slider({ images1 }) {
                             <p className="mt-[.2vw] text-[.8vw] text-gray-500">
                               {`${imageName[2]}`}
                             </p>
-                            <button className="mt-[.5vw] px-[1vw] py-[.5vw] rounded-md bg-blue-700 font-semibold text-white text-[.7vw]">Read More</button>
+                            <button 
+                            className="mt-[.5vw] px-[1vw] py-[.5vw] 
+                            rounded-md bg-blue-700 font-semibold text-white text-[.7vw]"
+                            onClick={()=>handleRedirectedInstruction(imageName[5])}>Read More</button>
                             </div>
                         </li>
                     ))}
