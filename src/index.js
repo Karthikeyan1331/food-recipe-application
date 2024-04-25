@@ -12,12 +12,13 @@ import ForgetPassCheckMail from './login/forget_password/CheckYourMail'
 import ForgetPassVerified from './login/forget_password/Forget_Password_Mail_verification'
 import ForgetPassReSetPass from './login/forget_password/ReSetPassword'
 import Profile from './createFood/Profile'
-import Dash from './createFood/dashboard'
+import Dash from './createFood/Dashboard'
+import History from './history/History'
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 import {
-createBrowserRouter,
+  createBrowserRouter,
   RouterProvider,
   Route
 } from "react-router-dom";
@@ -28,48 +29,52 @@ const router = createBrowserRouter([
     element: <App />,
   },
   {
-    path:"/Login",
-    element:<Login/>,
+    path: "/Login",
+    element: <Login />,
   },
   {
-    path:"/Search",
-    element:<SearchP/>,
+    path: "/Search",
+    element: <SearchP />,
   },
   {
-    path:"/Instruction",
-    element:<Instruction/>,
+    path: "/Instruction",
+    element: <Instruction />,
   },
   {
-    path:"/CheckYourMail",
-    element:<CheckYourMail/>,
+    path: "/CheckYourMail",
+    element: <CheckYourMail />,
   },
   {
-    path:"/verify",
-    element:<Verifiedd/>,
+    path: "/verify",
+    element: <Verifiedd />,
   },
   {
-    path:"/ForgetPassword",
-    element:<ForgetPassword/>,
+    path: "/ForgetPassword",
+    element: <ForgetPassword />,
   },
   {
-    path:"/ForgetPassCheckMail",
-    element:<ForgetPassCheckMail/>,
+    path: "/ForgetPassCheckMail",
+    element: <ForgetPassCheckMail />,
   },
   {
-    path:"/ForgetPassVerified",
-    element:<ForgetPassVerified/>,
+    path: "/ForgetPassVerified",
+    element: <ForgetPassVerified />,
   },
   {
-    path:"/ForgetPassReSetPass",
-    element:<ForgetPassReSetPass/>,
+    path: "/ForgetPassReSetPass",
+    element: <ForgetPassReSetPass />,
   },
   {
-    path:"/Profile",
-    element:<Profile/>,
+    path: "/Profile",
+    element: <Profile />,
   },
   {
-    path:"/Create",
-    element:<Dash/>,
+    path: "/Create",
+    element: <Dash />,
+  },
+  {
+    path: "/history",
+    element: <History />,
   },
 ]);
 const root = ReactDOM.createRoot(document.getElementById('root'));

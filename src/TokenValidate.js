@@ -7,21 +7,31 @@ const TokenValidation = () => {
   const [tokenVariable, setTokenVariable] = useState(null)
   axios.defaults.withCredentials = true
   useEffect(() => {
-    axios.post('http://localhost:8000/ValidToken')
+    axios.post('/ValidToken')
       .then((response) => {
         response = response.data;
         console.log(response);
         if (response.valid) {
+          if (response.message.tokenD) {
+            localStorage.setItem("auth_code", response.message.tokenD)
+          }
           setTokenVariable(response.message)
         } else {
-          setTokenVariable(false)
-          navigate('/Login', { state: false });
-          console.log(response.message);
+          if (!("auth_code" in localStorage)) {
+            setTokenVariable(false)
+            navigate('/Login', { state: false });
+            console.log(response.message);
+          }
+          else {
+            if ("useData" in localStorage)
+              setTokenVariable(JSON.parse(localStorage.getItem("useData")))
+            else navigate('/Login', { state: false });
+          }
         }
       });
   }, []);
+  return tokenVariable;
 
-  return tokenVariable;// Since this component is for logic only, return null
 };
 
 export default TokenValidation;

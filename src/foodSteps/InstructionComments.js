@@ -25,7 +25,14 @@ const InstructionComments = ({ id }) => {
     const fetchData = async () => {
       try {
         console.log("hello", id)
-        const response = await axios.post(`${API_URL}api/InstructionsComments`, { id })
+        const response = await axios.post(`${API_URL}api/InstructionsComments`,
+          { id },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${localStorage.getItem('auth_code')}`,
+            },
+          })
         console.log(response.data.data[0])
         setData(response.data.data[0]);
         setUserLiked(response.data.data[1])
@@ -39,7 +46,7 @@ const InstructionComments = ({ id }) => {
       fetchData();
   }, [id]);
 
-  const [profilePic, setProfilePic] = useState(JSON.parse(localStorage.getItem("useData"))['picture']);
+  const [profilePic, setProfilePic] = useState(JSON.parse(localStorage.getItem("useData"))['profile']);
   console.log(profilePic)
 
   // Example usage
@@ -56,7 +63,14 @@ const InstructionComments = ({ id }) => {
     try {
 
       console.log("hello", id)
-      const response = await axios.post(`${API_URL}api/InsertComments`, { id: id, comments: comment })
+      const response = await axios.post(`${API_URL}api/InsertComments`,
+        { id: id, comments: comment },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('auth_code')}`,
+          },
+        })
       // Handle the response from the backend as needed
       setComment('')
       setFocusOnComment(false)
@@ -109,7 +123,7 @@ const InstructionComments = ({ id }) => {
       </div>
       <div className='InputArea my-3 mx-1'>
         <div className='flex'>
-          <img src={profilePic?profilePic:'img/slider-01.png'} alt=''
+          <img src={profilePic ? profilePic : 'img/slider-01.png'} alt=''
             id="pictureComment"
             className='border-2 shadow-sm   cursor-pointer w-[40px] h-[40px] rounded-full'></img>
           <input
@@ -138,7 +152,7 @@ const InstructionComments = ({ id }) => {
         {dataValue && dataValue.length > 0 && dataValue.map((valComments, index) => (
           <div key={index} className='UserComments'>
             <div className='float-left'>
-              <img src={valComments['profile']?valComments['profile']:'img/slider-01.png'} alt=''
+              <img src={valComments['profile'] ? valComments['profile'] : 'img/slider-01.png'} alt=''
                 className='border-2 shadow-sm cursor-pointer w-[38px] h-[38px] rounded-full'></img>
             </div>
             <div className='flex'>

@@ -30,19 +30,48 @@ const FoodInstruction = () => {
     const idValue = urlParams.get('id');
     return idValue;
   }
+  let cntI = 0
   useEffect(() => {
-    if (location.state) {
-      setData(location.state);
-    } else {
-      const idValue = extractIdFromURL(currentURL);
-      axios.post(`${API_URL}api/FoodInstruction`, { id: idValue })
-        .then(response => {
-          setData(response.data);
-        })
-        .catch(error => {
-          console.log('Error:', error);
-          navigate('/Search');
+    const fetchData = async () => {
+      console.log("Fetching data...");
+      try {
+        if (location.state) {
+          setData(location.state);
+          await handleFoodViews(location.state[9]);
+        } else {
+          const idValue = extractIdFromURL(currentURL);
+          const responseInstruction = await axios.post(`${API_URL}api/FoodInstruction`, { id: idValue });
+          setData(responseInstruction.data);
+          await handleFoodViews(idValue);
+        }
+      } catch (error) {
+        console.log('Error fetching data:', error);
+        navigate('/Search');
+      }
+    };
+
+    const handleFoodViews = async (idValue) => {
+      try {
+        const responseViews = await axios.post(`${API_URL}api/FoodViews`, { id: idValue }, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('auth_code')}`,
+          },
         });
+
+        if (responseViews.status === 200) {
+          console.log("User viewed this food successfully: " + idValue);
+        } else {
+          console.log("User view failed");
+        }
+      } catch (error) {
+        console.log('Error handling food views:', error);
+        navigate('/Search');
+      }
+    };
+    if (cntI === 0) {
+      cntI++
+      fetchData();
     }
   }, [location.state, currentURL, navigate]);
 
@@ -63,10 +92,10 @@ const FoodInstruction = () => {
     }
   }, [data]);
 
-  
+
 
   useEffect(() => {
-    
+
     const handleKeyPress = (event) => {
       if (event.ctrlKey && event.key === 'k') {
         toggleIcon();
@@ -83,8 +112,8 @@ const FoodInstruction = () => {
     };
 
   }, [toggleIcon, DestroyVoice]);
-  
-  
+
+
   useEffect(() => {
     if (!isPlaying && !isSpeechEnded) {
       let text = directions.join(". ");
@@ -107,7 +136,7 @@ const FoodInstruction = () => {
       window.speechSynthesis.cancel();
     }
   }, [isPlaying, isSpeechEnded, directions]);
-  
+
 
 
 
@@ -157,11 +186,11 @@ const FoodInstruction = () => {
         </div>
         {!hideAbovePic && (
           <div className='AbovePic w-[60vw]'>
-            <FoodBookmark id={data[9]}/>
+            <FoodBookmark id={data[9]} />
             <div className='Save' title="Download" onClick={handleDownloadPNG}><i className="bi bi-download"></i></div>
             <div className='Save' title="Print" onClick={printDiv}><i className="bi bi-printer"></i></div>
-            <FoodLikes id={data[9]}/>
-            <FoodReport id={data[9]} heading={data[0]}/>
+            <FoodLikes id={data[9]} />
+            <FoodReport id={data[9]} heading={data[0]} />
             <div className='IMadeThis' title='Photo'><i className="bi bi-camera"></i>&nbsp;I Made This</div>
           </div>
         )}
@@ -218,7 +247,7 @@ const FoodInstruction = () => {
 
         </div>
       </div>
-      <FoodComments id={data[9]}/>
+      <FoodComments id={data[9]} />
       <div>
         <Foot />
       </div>

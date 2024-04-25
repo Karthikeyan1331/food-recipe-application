@@ -32,7 +32,12 @@ const FoodReport = ({ id, heading }) => {
                     typeOfReport,
                     foodName,
                     complain,
-                });
+                }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem('auth_code')}`,
+                },
+            });
             let tempData = response.data;
             console.log(tempData)
             if (tempData.status) {

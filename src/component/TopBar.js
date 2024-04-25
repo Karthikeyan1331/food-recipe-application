@@ -50,12 +50,14 @@ const TopBar = () => {
       setProfilePic(temp.profile)}
   }, [temp])
   const handleLogout = async () => {
+    localStorage.removeItem("auth_code")
+    localStorage.removeItem("useData")
     try {
       // Send a POST request to your backend logout endpoint
       const response = await axios.post('http://localhost:8000/logout');
       if (response.status === 200) {
         // Redirect to login page or perform any other action after successful logout
-        window.location.reload() // Redirect to login page
+        window.location.href="./Login" // Redirect to login page
       } else {
         // Handle logout failure
         console.error('Logout failed:', response.data);

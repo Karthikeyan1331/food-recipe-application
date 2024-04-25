@@ -13,7 +13,14 @@ const Profile = () => {
 
   const handleOnSave = async () => {
     console.log("hello")
-    const response = await axios.post('/EditUserData', { ...formElements });
+    const response = await axios.post('/EditUserData',
+      { ...formElements },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('auth_code')}`,
+        },
+      });
     if (response.status === 200) {
       console.log(response.data.data)
       window.location.reload();
@@ -34,7 +41,7 @@ const Profile = () => {
 
     const formData = new FormData();
     formData.append('file', selectedFile);
-
+    formData.append('_id', formElements._id);
     try {
       const response = await axios.post('http://localhost:8000/Editprofile', formData);
       if (response.status === 200) {

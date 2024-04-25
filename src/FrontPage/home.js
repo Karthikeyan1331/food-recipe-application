@@ -17,8 +17,8 @@ const Home = () => {
   const handleClick = (bool) => {
     navigate('/Login', { state: bool });
   };
-  const onClickSearch = () => {
-    navigate('./Search')
+  const onClickSearch = (e) => {
+    navigate('./'+e)
   }
   let temp = CheckCred();
   const [validate, setvalidate] = useState(temp)
@@ -32,10 +32,14 @@ const Home = () => {
     }
   }, [temp])
   const handleLogout = async () => {
+
     try {
       // Send a POST request to your backend logout endpoint
-      const response = await axios.post('http://localhost:8000/logout');
+      const response = await axios.post('/logout');
       if (response.status === 200) {
+
+        localStorage.removeItem('auth_code');
+        localStorage.removeItem('useData')
         // Redirect to login page or perform any other action after successful logout
         window.location.reload() // Redirect to login page
       } else {
@@ -52,8 +56,8 @@ const Home = () => {
         <img className="logo rounded-full border-2" src="/image/logo.jpg" alt='hi'></img>
         <div className='NavBar'>
           <div>Home</div>
-          <div onClick={onClickSearch}>Search</div>
-          <div>History</div>
+          <div onClick={()=>onClickSearch("Search")}>Search</div>
+          <div onClick={()=>onClickSearch("History")}>History</div>
           <div>Cusines</div>
           <div>About</div>
         </div>
