@@ -4,6 +4,7 @@ import CheckCred from '../TokenValidate';
 import axios from 'axios'
 const Home = () => {
   const navigate = useNavigate();
+  const [admin, setAdmin] = useState(false)
   function generateSrcSet(originalUrl) {
     // Split the URL at the '=s' part to extract the base URL
     const [baseUrl] = originalUrl.split('=s');
@@ -18,7 +19,7 @@ const Home = () => {
     navigate('/Login', { state: bool });
   };
   const onClickSearch = (e) => {
-    navigate('/'+e)
+    navigate('/' + e)
   }
   let temp = CheckCred();
   const [validate, setvalidate] = useState(temp)
@@ -26,6 +27,7 @@ const Home = () => {
   useEffect(() => {
     setvalidate(temp)
     if (temp) {
+      setAdmin(temp?.admin)
       localStorage.setItem("useData", JSON.stringify(temp))
 
       setProfilePic(temp.picture)
@@ -56,19 +58,26 @@ const Home = () => {
         <img className="logo rounded-full border-2" src="/image/logo.jpg" alt='hi'></img>
         <div className='NavBar'>
           <div>Home</div>
-          <div onClick={()=>onClickSearch("Search")}>Search</div>
-          <div onClick={()=>onClickSearch("History")}>History</div>
-          <div onClick={()=>onClickSearch("Create")}>Create</div>
-          <div onClick={()=>onClickSearch("Profile")}>Profile</div>
+          <div onClick={() => onClickSearch("Search")}>Search</div>
+          {
+            validate && (
+              <>
+                <div onClick={() => onClickSearch("History")}>History</div>
+                <div onClick={() => onClickSearch("Create")}>Create</div>
+                <div onClick={() => onClickSearch("Profile")}>Profile</div>
+              </>
+            )
+          }
+          {admin && <div onClick={() => onClickSearch("AdminFoodReport")}>Report</div>}
         </div>
         {!validate ? (
           <>
             <div onClick={() => { handleClick(false) }} className='SignIn'>SIGN IN
               <i className="bi bi-box-arrow-in-right"></i></div>
             <div onClick={() => { handleClick(true) }} className='SignUp'>SIGN UP</div></>
-        ) : (<div className='ml-[15vw] flex'>
+        ) : (<div className='ml-[22vw] flex'>
           <div onClick={handleLogout} className='rounded-lg font-bold cursor-pointer text-white 
-          bg-red-500 px-[1.1vw] py-[1vw] text-[1.2vw] transition-all hover:bg-red-600'>
+          bg-red-500 px-[1.1vw] py-[1vw] text-[1vw] transition-all hover:bg-red-600'>
             LOG OUT<i className="bi bi-box-arrow-in-right"></i></div>
         </div>)}
       </div>
@@ -77,7 +86,7 @@ const Home = () => {
         <div className='About'>Savor Every Moment, Taste Every Bite</div>
         <div className='Cook'>Let'S Cook!</div>
         <div className='des'>Explore 6000+ Delicious Recipes Today</div>
-        <div className="ButtonS" onClick={()=>onClickSearch("Search")}>Search</div>
+        <div className="ButtonS" onClick={() => onClickSearch("Search")}>Search</div>
       </div>
       <div className='RightS'>
 

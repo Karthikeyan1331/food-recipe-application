@@ -9,6 +9,8 @@ const InstructionComments = ({ id }) => {
   const [focusOnComment, setFocusOnComment] = useState(false)
   const [dataValue, setData] = useState([])
   const [userLiked, setUserLiked] = useState('')
+  let temp = 'auth_code' in localStorage
+  const [validate, setvalidate] = useState(temp)
 
 
   const handleInputChange = (event) => {
@@ -42,12 +44,12 @@ const InstructionComments = ({ id }) => {
         // Handle errors if needed
       }
     };
-    if (id && id !== null)
+    if (id && id !== null && temp)
       fetchData();
-  }, [id]);
+  }, [id, temp]);
 
-  const [profilePic, setProfilePic] = useState(JSON.parse(localStorage.getItem("useData"))['profile']);
-  console.log(profilePic)
+  const [profilePic, setProfilePic] = useState(('useData' in localStorage) ? localStorage.getItem("useData")['profile']:null);
+  
 
   // Example usage
   const handleButtonCancel = useCallback(() => {
@@ -60,32 +62,34 @@ const InstructionComments = ({ id }) => {
   }
 
   async function handleOnSubmitComment() {
-    try {
+    if (temp) {
+      try {
 
-      console.log("hello", id)
-      const response = await axios.post(`${API_URL}api/InsertComments`,
-        { id: id, comments: comment },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem('auth_code')}`,
-          },
-        })
-      // Handle the response from the backend as needed
-      setComment('')
-      setFocusOnComment(false)
+        console.log("hello", id)
+        const response = await axios.post(`${API_URL}api/InsertComments`,
+          { id: id, comments: comment },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${localStorage.getItem('auth_code')}`,
+            },
+          })
+        // Handle the response from the backend as needed
+        setComment('')
+        setFocusOnComment(false)
 
-      if (response.status === 200) {
-        setData(response.data.data[0]);
-        setUserLiked(response.data.data[1])
+        if (response.status === 200) {
+          setData(response.data.data[0]);
+          setUserLiked(response.data.data[1])
 
+        }
+        else {
+          console.log(response.data.message)
+        }
+      } catch (error) {
+        console.error('Error fetching data from the backend:', error.message);
+        // Handle errors if needed
       }
-      else {
-        console.log(response.data.message)
-      }
-    } catch (error) {
-      console.error('Error fetching data from the backend:', error.message);
-      // Handle errors if needed
     }
   }
   function timeStrapConvertion(timestamp) {

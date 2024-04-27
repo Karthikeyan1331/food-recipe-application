@@ -22,6 +22,8 @@ const FoodInstruction = () => {
   const [isSpeechEnded, setIsSpeechEnded] = useState(false);
   const [isPlaying, setIsPlaying] = useState(true);
   const navigate = useNavigate();
+  let temp = 'auth_code' in localStorage
+    const [validate, setvalidate] = useState(temp)
   const currentURL = window.location.href;
 
   // Function to extract the value of 'id' from the URL
@@ -37,16 +39,19 @@ const FoodInstruction = () => {
       try {
         if (location.state) {
           setData(location.state);
+          if(temp)
           await handleFoodViews(location.state[9]);
         } else {
           const idValue = extractIdFromURL(currentURL);
           const responseInstruction = await axios.post(`${API_URL}api/FoodInstruction`, { id: idValue });
           setData(responseInstruction.data);
+          console.log(temp)
+          if(temp)
           await handleFoodViews(idValue);
         }
       } catch (error) {
         console.log('Error fetching data:', error);
-        navigate('/Search');
+        
       }
     };
 
@@ -66,14 +71,13 @@ const FoodInstruction = () => {
         }
       } catch (error) {
         console.log('Error handling food views:', error);
-        navigate('/Search');
       }
     };
     if (cntI === 0) {
       cntI++
       fetchData();
     }
-  }, [location.state, currentURL, navigate]);
+  }, [location.state, currentURL, navigate, temp, cntI]);
 
   const toggleIcon = useCallback(() => {
     setIsPlaying(prevIsPlaying => !prevIsPlaying);

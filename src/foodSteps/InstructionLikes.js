@@ -4,7 +4,7 @@ import API_URL from '../config';
 const InstructionLikes = ({ id }) => {
     const [foodLike, setFoodLike] = useState(false);
     const [likeCount, setLikeCount] = useState(0);
-
+    let temp = 'auth_code' in localStorage
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -24,31 +24,33 @@ const InstructionLikes = ({ id }) => {
                 // Handle errors if needed
             }
         };
-        if (id && id !== null)
+        if (id && id !== null && temp)
             fetchData();
-    }, [id]);
+    }, [id, temp]);
     async function userClickHeartBtn() {
-        try {
-            const response = await axios.post(`${API_URL}api/UserLiked`,
-                { id },
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${localStorage.getItem('auth_code')}`,
-                    },
-                });
-            if (response.data.existed) {
-                setFoodLike(response.data.existed)
-                setLikeCount(likeCount + 1)
+        if (temp) {
+            try {
+                const response = await axios.post(`${API_URL}api/UserLiked`,
+                    { id },
+                    {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: `Bearer ${localStorage.getItem('auth_code')}`,
+                        },
+                    });
+                if (response.data.existed) {
+                    setFoodLike(response.data.existed)
+                    setLikeCount(likeCount + 1)
+                }
+                else {
+                    setLikeCount(likeCount - 1)
+                    setFoodLike(response.data.existed)
+                }
+                // Handle the response from the backend as needed
+            } catch (error) {
+                console.error('Error fetching data from the backend:', error);
+                // Handle errors if needed
             }
-            else {
-                setLikeCount(likeCount - 1)
-                setFoodLike(response.data.existed)
-            }
-            // Handle the response from the backend as needed
-        } catch (error) {
-            console.error('Error fetching data from the backend:', error);
-            // Handle errors if needed
         }
     }
     return (

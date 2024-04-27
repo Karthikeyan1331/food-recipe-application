@@ -186,6 +186,8 @@ const Dashboard = () => {
                                         <div className='btn btn-danger' onClick={() => deleteFunctionFile(item._id, item.TranslatedRecipeName)}><i className="bi bi-trash-fill"></i></div>
                                         <div className=' ml-2 btn btn-dark' onClick={() => handleOnclickBtn(item._id)}><i className="bi bi-pencil-fill"></i></div>
                                         <div className='ml-4 mr-0 btn btn-info' onClick={() => redirectToNextPage(item)}>View</div>
+                                        {item.approve === 0 && <div title="Waiting" className='p-0 ml-3 btn'><i className="text-yellow-500 p-0 text-[30px] bi bi-hourglass-split"></i></div>}
+                                        {item.approve === 2 && <div title="Rejected" className='p-0 ml-3 btn'><i className="text-red-500 p-0 text-[30px] bi bi-x-octagon-fill"></i></div>}
                                         {item.approve === 1 && <div title="Approved" className='p-0 ml-3 btn'><i className="text-blue-500 p-0 text-[30px] bi bi-patch-check-fill"></i></div>}
                                     </td>
                                 </tr>

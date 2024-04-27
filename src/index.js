@@ -94,10 +94,6 @@ const router = createBrowserRouter([
     element: <AdminLogin />,
   },
   {
-    path: "/AdminFoodAprove",
-    element: <Approve />,
-  },
-  {
     path: "/AdminFoodReport",
     element: <AdminReport />,
   },

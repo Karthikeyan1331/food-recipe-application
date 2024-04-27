@@ -35,8 +35,8 @@ body {
   }
   
   .NavBar div {
-    padding: 1.5vw;
-    margin-right: 3.5vw;
+    padding: 1vw;
+    margin-right: 2.5vw;
   }
   
   .NavBar div:last-child {

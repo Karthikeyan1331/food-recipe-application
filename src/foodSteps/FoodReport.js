@@ -9,6 +9,7 @@ const FoodReport = ({ id, heading }) => {
     const [foodName, setFoodName] = useState('')
     const [typeOfReport, setTypeOfReport] = useState('')
     const [complain, setComplain] = useState('');
+    let temp = 'auth_code' in localStorage
     const handleReportClick = () => {
         setIsModalOpen(true);
     };
@@ -24,32 +25,34 @@ const FoodReport = ({ id, heading }) => {
         setIsModalOpen(false);
     };
     const onSubmitReport = async () => {
-        console.log(typeOfReport, complain, idValue)
-        try {
-            const response = await axios.post(`${API_URL}api/sendReport`,
-                {
-                    idValue,
-                    typeOfReport,
-                    foodName,
-                    complain,
-                }, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${localStorage.getItem('auth_code')}`,
-                },
-            });
-            let tempData = response.data;
-            console.log(tempData)
-            if (tempData.status) {
-                console.log(tempData.message)
-                setIsModalOpen(false);
+        if (temp) {
+            console.log(typeOfReport, complain, idValue)
+            try {
+                const response = await axios.post(`${API_URL}api/sendReport`,
+                    {
+                        idValue,
+                        typeOfReport,
+                        foodName,
+                        complain,
+                    }, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${localStorage.getItem('auth_code')}`,
+                    },
+                });
+                let tempData = response.data;
+                console.log(tempData)
+                if (tempData.status) {
+                    console.log(tempData.message)
+                    setIsModalOpen(false);
+                }
+                else {
+                    console.log(tempData.message)
+                }
             }
-            else {
-                console.log(tempData.message)
+            catch (error) {
+                console.log(error.message)
             }
-        }
-        catch (error) {
-            console.log(error.message)
         }
     }
     useEffect(() => {

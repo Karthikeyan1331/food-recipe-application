@@ -19,13 +19,12 @@ const TokenValidation = () => {
         } else {
           if (!("auth_code" in localStorage)) {
             setTokenVariable(false)
-            navigate('/Login', { state: false });
             console.log(response.message);
           }
           else {
             if ("useData" in localStorage)
               setTokenVariable(JSON.parse(localStorage.getItem("useData")))
-            else navigate('/Login', { state: false });
+            
           }
         }
       });
