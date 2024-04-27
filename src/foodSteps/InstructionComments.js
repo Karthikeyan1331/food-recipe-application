@@ -44,11 +44,12 @@ const InstructionComments = ({ id }) => {
         // Handle errors if needed
       }
     };
-    if (id && id !== null && temp)
-      fetchData();
+    if (id && id !== null && temp){
+      setProfilePic(JSON.parse(localStorage.getItem("useData"))['profile'])
+      fetchData();}
   }, [id, temp]);
 
-  const [profilePic, setProfilePic] = useState(('useData' in localStorage) ? localStorage.getItem("useData")['profile']:null);
+  const [profilePic, setProfilePic] = useState(null);
   
 
   // Example usage

@@ -4,50 +4,39 @@ import Foot from './foot'
 export default function Trending() {
   // Assuming your Slider component requires some data items
 
-  const [response, setResponse] = useState('');
-  const [arr, setArr] = useState([]);
   const [arr1, setArr1] = useState([]);
   const [arr2, setArr2] = useState([]);
+  const [arr3, setArr3] = useState([]);
 
-  async function funtosee(data) {
-    console.log(data);
-    let temp = data.map((item) => [
-      item['TranslatedRecipeName'],
-      item['Cuisine'],
-      item['Diet'],
-      item['Course'],
-      item['Image'],
-      item['_id']
-    ])
-
-    return temp
-  }
-  const sendMessage = async (searchQuery, currentPage, perPage) => {
-    try {
-      const response = await fetch('http://localhost:8000/api/search', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ message: searchQuery, currentPage: currentPage, perPage: perPage }),
-      });
-
-      const data = await response.json();
-      setResponse(data.response);
-      console.log(funtosee(data.datavalue))
-      return funtosee(data.datavalue);
-    } catch (error) {
-      console.error('Error sending message:', error);
-    }
-  };
   useEffect(() => {
-    const fetchCall = async() => {
-      console.log("shit")
-      setArr(await sendMessage("Dinner", 1, 20))
-      setArr1(await sendMessage("Lunch", 1, 20))
-      setArr2(await sendMessage("Breakfast", 1, 20))
-    }
-    fetchCall()
+    // Fetch data and update state for each Slider instance
+    const fetchSliderData = async (searchQuery, setCurrentArr) => {
+      try {
+        const response = await fetch('http://localhost:8000/api/search', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ message: searchQuery, currentPage: 1, perPage: 20 }),
+        });
+
+        const data = await response.json();
+        setCurrentArr(data.datavalue.map((item) => [
+          item['TranslatedRecipeName'],
+          item['Cuisine'],
+          item['Diet'],
+          item['Course'],
+          item['Image'],
+          item['_id']
+        ]));
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchSliderData("Dinner Breakfast", setArr1);
+    fetchSliderData("Lunch", setArr2);
+    fetchSliderData("meat Dinner chicken", setArr3);
   }, []);
 
   return (
@@ -57,7 +46,7 @@ export default function Trending() {
       <div className='Recommed'>
         TRENDING RECIPE
       </div>
-      <Slide images1={arr2} />
+      <Slide images1={arr1} />
       <div className='Recommed'>
         Cuisines
       </div>
@@ -84,7 +73,7 @@ export default function Trending() {
         </div>
       </div>
       <div className='mt-[4vw]'>
-        <Slide images1={arr2} />
+        <Slide images1={arr3} />
       </div>
       <br />
 

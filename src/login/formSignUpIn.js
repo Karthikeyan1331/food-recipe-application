@@ -72,7 +72,7 @@ const Login = () => {
     }
     else {
       // Send data to Node.js server
-      fetch('http://localhost:8000/api/Login', {
+      fetch('/api/Login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -16,7 +16,7 @@ const AdminDashBoard = () => {
                     id="uncontrolled-tab-example"
                     className="mb-3"
                 >
-                    <Tab eventKey="home" title="Home" className='justify-center align-middle'>
+                    <Tab eventKey="home" title="Approve" className='justify-center align-middle'>
                         < Approve />
                     </Tab>
                     <Tab eventKey="profile" title="Report" className='justify-center align-middle'>

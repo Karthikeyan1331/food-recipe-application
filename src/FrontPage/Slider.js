@@ -2,53 +2,63 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 export default function Slider({ images1 }) {
   // Assuming your Slider component requires some data items
+  
   const [sliderContent, setSliderContent] = useState(null);
   const [slider, setSlider] = useState(null);
+  const [cardWidth, setCardWidth] = useState(0);
+  const [sliderContainerWidth, setSliderContainerWidth] = useState(0);
+  const [cards, setCards] = useState({});
+  const [number, setNumber] = useState(0);
+
   const navigate = useNavigate();
-  const inputRef =useRef()
-  let cardWidth=0,sliderContainerWidth=0,cards={},number=0
-  function myFunc() {
-    if (sliderContent && slider) {
-        cards=slider.getElementsByTagName('li')
-        number=3
-        sliderContainerWidth=sliderContent.clientWidth;
-        console.log(sliderContainerWidth)
-        cardWidth=sliderContainerWidth/number
-        inputRef.current.style.width=images1.length*cardWidth+'px'
-        inputRef.current.style.transition='margin';
-        inputRef.current.style.transitionDuration='1s';
-        for(let i=0;i<cards.length;i++){
-            inputRef.current.getElementsByTagName('li')[i].style.width=cardWidth+'px'
-            
-        }
-    }
-  }
+  const inputRef1 = useRef();
+  const inputRef = useRef();
 
   useEffect(() => {
-    // This code will run after the component has been rendered
-    let container = document.getElementById("sliderContainer");
-    let cont = document.getElementById("slider");
+    let container = inputRef1.current;
+    let cont = inputRef.current;
 
-    if (container && cont && images1.length>0) {
-        setSliderContent(container);
+    if (container && cont && images1.length > 0) {
+      setSliderContent(container);
       setSlider(cont);
-      myFunc();
     }
-  }, [slider, sliderContent, images1]);
+  }, [images1]);
 
-  function prev(){
-    console.log(Math.round(+inputRef.current.style.marginLeft.slice(0,-2)), Math.round(-cardWidth*(cards.length-number)))
-    if(Math.round(+inputRef.current.style.marginLeft.slice(0,-2))> Math.round(-cardWidth*(cards.length-number)))
-        inputRef.current.style.marginLeft=((+inputRef.current.style.marginLeft.slice(0,-2))-cardWidth)+'px'
-  }
-  function nxt(){
-    if(Math.round(+inputRef.current.style.marginLeft.slice(0,-2))<0)
-    inputRef.current.style.marginLeft=((+inputRef.current.style.marginLeft.slice(0,-2))+cardWidth)+'px'
-    
+  useEffect(() => {
+    if (sliderContent && slider) {
+      const cardsList = slider.getElementsByTagName('li');
+      setCards(cardsList);
+      setNumber(3);
+      setSliderContainerWidth(sliderContent.clientWidth);
+    }
+  }, [sliderContent, slider]);
+
+  useEffect(() => {
+    setCardWidth(sliderContainerWidth / number);
+    if (inputRef.current) {
+      inputRef.current.style.width = images1.length * cardWidth + 'px';
+      inputRef.current.style.transition = 'margin';
+      inputRef.current.style.transitionDuration = '1s';
+      for (let i = 0; i < cards.length; i++) {
+        inputRef.current.getElementsByTagName('li')[i].style.width = cardWidth + 'px';
+      }
+    }
+  }, [cardWidth, sliderContainerWidth, number, images1, cards]);
+
+  function prev() {
+    if (Math.round(+inputRef.current.style.marginLeft.slice(0, -2)) > Math.round(-cardWidth * (cards.length - number))) {
+      inputRef.current.style.marginLeft = ((+inputRef.current.style.marginLeft.slice(0, -2)) - cardWidth) + 'px';
+    }
   }
 
-  const handleRedirectedInstruction=(id)=>{
-    navigate('/Instruction?id='+id)
+  function nxt() {
+    if (Math.round(+inputRef.current.style.marginLeft.slice(0, -2)) < 0) {
+      inputRef.current.style.marginLeft = ((+inputRef.current.style.marginLeft.slice(0, -2)) + cardWidth) + 'px';
+    }
+  }
+
+  const handleRedirectedInstruction = (id) => {
+    navigate('/Instruction?id=' + id);
   }
   return (
     <div className="transform translate-y-[6vw] mb-[6vw]">
@@ -62,7 +72,7 @@ export default function Slider({ images1 }) {
                     </svg>
                 </button></div>
             </div>
-            <div id="sliderContainer" className="w-10/12 overflow-hidden">
+            <div ref={inputRef1} id="sliderContainer" className="w-10/12 overflow-hidden">
                 <ul ref={inputRef} id="slider" className="flex w-full">
                     {images1.map((imageName, index) => (
                         <li key={index} className="p-[1vw]">
